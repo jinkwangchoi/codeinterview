@@ -19,4 +19,8 @@ func TestGroup(t *testing.T) {
 	Convey("example", t, func() {
 		So(group.Password(), ShouldEqual, 32)
 	})
+
+	Convey("maxRectangleArea", t, func() {
+		So(group.maxRectangleArea(0, 0), ShouldEqual, 24)
+	})
 }
