@@ -11,14 +11,35 @@ func NewGroup(tiles []string) *Group {
 }
 
 func (g Group) Password() int {
-	return 32
+	var maxArea int
+	for y := range g.tiles {
+		for x := range g.tiles[y] {
+			area := g.maxRectangleArea(x, y)
+			if area > maxArea {
+				maxArea = area
+			}
+		}
+	}
+	return maxArea
 }
 
 func (g Group) maxRectangleArea(x, y int) int {
-	if x == 1 {
-		return 9
+	var maxArea int
+	topLeftTile := g.tiles[y][x]
+	xIndicesOfSameTilesInRow := g.findXIndicesOfSameTilesInRow(x, y)
+	for _, xIndexOfSameTilesInRow := range xIndicesOfSameTilesInRow {
+		yIndicesOfSameTilesInColumn := g.findYIndicesOfSameTilesInColumn(xIndexOfSameTilesInRow, y)
+		for _, yIndexOfSameTilesInColumn := range yIndicesOfSameTilesInColumn {
+			tile := g.tiles[yIndexOfSameTilesInColumn][x]
+			if tile == topLeftTile {
+				area := calcRectArea(x, y, xIndexOfSameTilesInRow, yIndexOfSameTilesInColumn)
+				if area > maxArea {
+					maxArea = area
+				}
+			}
+		}
 	}
-	return 24
+	return maxArea
 }
 
 func (g Group) findXIndicesOfSameTilesInRow(x, y int) []int {
@@ -43,4 +64,10 @@ func (g Group) findYIndicesOfSameTilesInColumn(x, y int) []int {
 		}
 	}
 	return result
+}
+
+func calcRectArea(topLeftX, topLeftY, bottomRightX, bottomRightY int) int {
+	width := bottomRightX - topLeftX + 1
+	height := bottomRightY - topLeftY + 1
+	return width * height
 }
