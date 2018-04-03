@@ -3,22 +3,21 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/jinkwangchoi/codeinterview/tile"
 	"log"
 	"os"
+
+	"github.com/jinkwangchoi/codeinterview/tile"
 )
 
 func main() {
 	if len(os.Args) != 2 {
 		log.Fatal("usage: codeinterview inputfilename")
-		os.Exit(1)
 	}
 
 	fileName := os.Args[1]
 	file, err := os.Open(fileName)
 	if err != nil {
 		log.Fatal(err)
-		os.Exit(1)
 	}
 	defer file.Close()
 
