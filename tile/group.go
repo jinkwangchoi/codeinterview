@@ -67,6 +67,12 @@ func (g Group) findYIndicesOfSameTilesInColumn(x, y int) []int {
 }
 
 func calcRectArea(topLeftX, topLeftY, bottomRightX, bottomRightY int) int {
+	if topLeftX > bottomRightX {
+		return 0
+	}
+	if topLeftY > bottomRightY {
+		return 0
+	}
 	width := bottomRightX - topLeftX + 1
 	height := bottomRightY - topLeftY + 1
 	return width * height

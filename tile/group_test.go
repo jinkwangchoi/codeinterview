@@ -41,5 +41,13 @@ func TestGroup(t *testing.T) {
 		So(calcRectArea(0, 0, 1, 0), ShouldEqual, 2)
 		So(calcRectArea(0, 0, 0, 1), ShouldEqual, 2)
 		So(calcRectArea(0, 0, 1, 1), ShouldEqual, 4)
+
+		// range check
+		So(calcRectArea(1, 0, 0, 0), ShouldEqual, 0)
+		So(calcRectArea(0, 1, 0, 0), ShouldEqual, 0)
+		So(calcRectArea(1, 1, 0, 0), ShouldEqual, 0)
+		So(calcRectArea(2, 0, 0, 0), ShouldEqual, 0)
+		So(calcRectArea(0, 2, 0, 0), ShouldEqual, 0)
+		So(calcRectArea(2, 2, 0, 0), ShouldEqual, 0)
 	})
 }
