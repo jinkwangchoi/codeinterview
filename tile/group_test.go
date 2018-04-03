@@ -24,16 +24,22 @@ func TestGroup(t *testing.T) {
 	Convey("maxRectangleArea", t, func() {
 		So(group.maxRectangleArea(0, 0), ShouldEqual, 24)
 		So(group.maxRectangleArea(1, 0), ShouldEqual, 9)
+		So(group.maxRectangleArea(-1, -1), ShouldEqual, 0)
+		So(group.maxRectangleArea(-1, -1), ShouldEqual, 0)
 	})
 
 	Convey("findXIndicesOfSameTilesInRow", t, func() {
 		So(group.findXIndicesOfSameTilesInRow(0, 0), ShouldResemble, []int{5, 6})
 		So(group.findXIndicesOfSameTilesInRow(1, 0), ShouldResemble, []int{2, 3, 4, 7})
+		So(group.findXIndicesOfSameTilesInRow(-1, -1), ShouldBeNil)
+		So(group.findXIndicesOfSameTilesInRow(-1, 0), ShouldBeNil)
 	})
 
 	Convey("findYIndicesOfSameTilesInColumn", t, func() {
 		So(group.findYIndicesOfSameTilesInColumn(0, 0), ShouldResemble, []int{1, 2, 3})
 		So(group.findYIndicesOfSameTilesInColumn(1, 0), ShouldResemble, []int{2})
+		So(group.findYIndicesOfSameTilesInColumn(-1, -1), ShouldBeNil)
+		So(group.findYIndicesOfSameTilesInColumn(-1, 0), ShouldBeNil)
 	})
 
 	Convey("calcRectArea", t, func() {

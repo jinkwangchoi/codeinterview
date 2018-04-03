@@ -1,5 +1,7 @@
 package tile
 
+import "fmt"
+
 type Group struct {
 	tiles []string
 }
@@ -8,6 +10,17 @@ func NewGroup(tiles []string) *Group {
 	return &Group{
 		tiles: tiles,
 	}
+}
+
+func (g Group) tileAt(x, y int) (uint8, error) {
+	err := fmt.Errorf("index out of range (%d, %d)", x, y)
+	if y < 0 || y >= len(g.tiles) {
+		return 0, err
+	}
+	if x < 0 || x >= len(g.tiles[y]) {
+		return 0, err
+	}
+	return g.tiles[y][x], nil
 }
 
 func (g Group) Password() int {
@@ -24,13 +37,19 @@ func (g Group) Password() int {
 }
 
 func (g Group) maxRectangleArea(x, y int) int {
+	topLeftTile, err := g.tileAt(x, y)
+	if err != nil {
+		return 0
+	}
 	var maxArea int
-	topLeftTile := g.tiles[y][x]
 	xIndicesOfSameTilesInRow := g.findXIndicesOfSameTilesInRow(x, y)
 	for _, xIndexOfSameTilesInRow := range xIndicesOfSameTilesInRow {
 		yIndicesOfSameTilesInColumn := g.findYIndicesOfSameTilesInColumn(xIndexOfSameTilesInRow, y)
 		for _, yIndexOfSameTilesInColumn := range yIndicesOfSameTilesInColumn {
-			tile := g.tiles[yIndexOfSameTilesInColumn][x]
+			tile, err := g.tileAt(x, yIndexOfSameTilesInColumn)
+			if err != nil {
+				continue
+			}
 			if tile == topLeftTile {
 				area := calcRectArea(x, y, xIndexOfSameTilesInRow, yIndexOfSameTilesInColumn)
 				if area > maxArea {
@@ -43,10 +62,16 @@ func (g Group) maxRectangleArea(x, y int) int {
 }
 
 func (g Group) findXIndicesOfSameTilesInRow(x, y int) []int {
-	refTile := g.tiles[y][x]
+	refTile, err := g.tileAt(x, y)
+	if err != nil {
+		return nil
+	}
 	var result []int
 	for xIndex := x + 1; xIndex < len(g.tiles[y]); xIndex++ {
-		tile := g.tiles[y][xIndex]
+		tile, err := g.tileAt(xIndex, y)
+		if err != nil {
+			continue
+		}
 		if refTile == tile {
 			result = append(result, xIndex)
 		}
@@ -55,10 +80,16 @@ func (g Group) findXIndicesOfSameTilesInRow(x, y int) []int {
 }
 
 func (g Group) findYIndicesOfSameTilesInColumn(x, y int) []int {
-	refTile := g.tiles[y][x]
+	refTile, err := g.tileAt(x, y)
+	if err != nil {
+		return nil
+	}
 	var result []int
 	for yIndex := y + 1; yIndex < len(g.tiles); yIndex++ {
-		tile := g.tiles[yIndex][x]
+		tile, err := g.tileAt(x, yIndex)
+		if err != nil {
+			continue
+		}
 		if refTile == tile {
 			result = append(result, yIndex)
 		}
