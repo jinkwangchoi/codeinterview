@@ -32,3 +32,15 @@ func (g Group) findXIndicesOfSameTilesInRow(x, y int) []int {
 	}
 	return result
 }
+
+func (g Group) findYIndicesOfSameTilesInColumn(x, y int) []int {
+	refTile := g.tiles[y][x]
+	var result []int
+	for yIndex := y + 1; yIndex < len(g.tiles); yIndex++ {
+		tile := g.tiles[yIndex][x]
+		if refTile == tile {
+			result = append(result, yIndex)
+		}
+	}
+	return result
+}
