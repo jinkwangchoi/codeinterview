@@ -3,6 +3,7 @@ package tile
 import (
 	"testing"
 
+	"bytes"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -56,4 +57,44 @@ func TestGroup(t *testing.T) {
 		So(calcRectArea(0, 2, 0, 0), ShouldEqual, 0)
 		So(calcRectArea(2, 2, 0, 0), ShouldEqual, 0)
 	})
+}
+
+func benchmarkGroup(width, height int, b *testing.B) {
+	var buffer bytes.Buffer
+	for i := 0; i < width; i++ {
+		buffer.WriteString("A")
+	}
+	atiles := buffer.String()
+	tiles := make([]string, height)
+	for i := range tiles {
+		tiles[i] = atiles
+	}
+	group := NewGroup(tiles)
+	for i := 0; i < b.N; i++ {
+		group.Password()
+	}
+}
+
+func BenchmarkGroup_Password10x10(b *testing.B) {
+	benchmarkGroup(10, 10, b)
+}
+
+func BenchmarkGroup_Password20x20(b *testing.B) {
+	benchmarkGroup(20, 20, b)
+}
+
+func BenchmarkGroup_Password30x30(b *testing.B) {
+	benchmarkGroup(30, 30, b)
+}
+
+func BenchmarkGroup_Password40x40(b *testing.B) {
+	benchmarkGroup(40, 40, b)
+}
+
+func BenchmarkGroup_Password50x50(b *testing.B) {
+	benchmarkGroup(50, 50, b)
+}
+
+func BenchmarkGroup_Password60x60(b *testing.B) {
+	benchmarkGroup(60, 60, b)
 }
