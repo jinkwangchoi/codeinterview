@@ -3,7 +3,6 @@ package tile
 import (
 	"testing"
 
-	"bytes"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -63,61 +62,47 @@ func TestGroup(t *testing.T) {
 	})
 }
 
-func benchmarkgroupPassword(width, height int, b *testing.B) {
-	group := generateGroup(width, height)
+var testTiles = []string{
+	`BCCCCBBCAABCCCCBBCAABCCCCBBCAABCCCCBBCAA`,
+	`BACBBABBAABACBBABBAABACBBABBAABACBBABBAA`,
+	`BCBCAAABCBBCBCAAABCBBCBCAAABCBBCBCAAABCB`,
+	`BBBACBACBABBBACBACBABBBACBACBABBBACBACBA`,
+	`AAACACCBACAAACACCBACAAACACCBACAAACACCBAC`,
+	`ABBAACBCCCABBAACBCCCABBAACBCCCABBAACBCCC`,
+	`CBAACBBCAACBAACBBCAACBAACBBCAACBAACBBCAA`,
+	`BCCCCBBCAABCCCCBBCAABCCCCBBCAABCCCCBBCAA`,
+	`BACBBABBAABACBBABBAABACBBABBAABACBBABBAA`,
+	`BCBCAAABCBBCBCAAABCBBCBCAAABCBBCBCAAABCB`,
+	`BBBACBACBABBBACBACBABBBACBACBABBBACBACBA`,
+	`AAACACCBACAAACACCBACAAACACCBACAAACACCBAC`,
+	`ABBAACBCCCABBAACBCCCABBAACBCCCABBAACBCCC`,
+	`CBAACBBCAACBAACBBCAACBAACBBCAACBAACBBCAA`,
+	`BCCCCBBCAABCCCCBBCAABCCCCBBCAABCCCCBBCAA`,
+	`BACBBABBAABACBBABBAABACBBABBAABACBBABBAA`,
+	`BCBCAAABCBBCBCAAABCBBCBCAAABCBBCBCAAABCB`,
+	`BBBACBACBABBBACBACBABBBACBACBABBBACBACBA`,
+	`AAACACCBACAAACACCBACAAACACCBACAAACACCBAC`,
+	`ABBAACBCCCABBAACBCCCABBAACBCCCABBAACBCCC`,
+	`CBAACBBCAACBAACBBCAACBAACBBCAACBAACBBCAA`,
+	`BCCCCBBCAABCCCCBBCAABCCCCBBCAABCCCCBBCAA`,
+	`BACBBABBAABACBBABBAABACBBABBAABACBBABBAA`,
+	`BCBCAAABCBBCBCAAABCBBCBCAAABCBBCBCAAABCB`,
+	`BBBACBACBABBBACBACBABBBACBACBABBBACBACBA`,
+	`AAACACCBACAAACACCBACAAACACCBACAAACACCBAC`,
+	`ABBAACBCCCABBAACBCCCABBAACBCCCABBAACBCCC`,
+	`CBAACBBCAACBAACBBCAACBAACBBCAACBAACBBCAA`,
+}
+
+func BenchmarkGroup_Password(b *testing.B) {
+	group := NewGroup(testTiles)
 	for i := 0; i < b.N; i++ {
 		group.Password()
 	}
 }
 
-func generateGroup(width, height int) *Group {
-	var buffer bytes.Buffer
-	for i := 0; i < width; i++ {
-		buffer.WriteString("A")
-	}
-	atiles := buffer.String()
-	tiles := make([]string, height)
-	for i := range tiles {
-		tiles[i] = atiles
-	}
-	return NewGroup(tiles)
-}
-
-func BenchmarkGroup_Password10x10(b *testing.B) {
-	benchmarkgroupPassword(10, 10, b)
-}
-
-func BenchmarkGroup_Password20x20(b *testing.B) {
-	benchmarkgroupPassword(20, 20, b)
-}
-
-func BenchmarkGroup_Password40x40(b *testing.B) {
-	benchmarkgroupPassword(40, 40, b)
-}
-
-func BenchmarkGroup_Password80x80(b *testing.B) {
-	benchmarkgroupPassword(80, 80, b)
-}
-
-func benchmarkgroupPasswordWithGoroutines(width, height int, b *testing.B) {
-	group := generateGroup(width, height)
+func BenchmarkGroup_PasswordWithGoroutines(b *testing.B) {
+	group := NewGroup(testTiles)
 	for i := 0; i < b.N; i++ {
 		group.PasswordWithGoroutines()
 	}
-}
-
-func BenchmarkGroup_PasswordWithGoroutines10x10(b *testing.B) {
-	benchmarkgroupPasswordWithGoroutines(10, 10, b)
-}
-
-func BenchmarkGroup_PasswordWithGoroutines20x20(b *testing.B) {
-	benchmarkgroupPasswordWithGoroutines(20, 20, b)
-}
-
-func BenchmarkGroup_PasswordWithGoroutines40x40(b *testing.B) {
-	benchmarkgroupPasswordWithGoroutines(40, 40, b)
-}
-
-func BenchmarkGroup_PasswordWithGoroutines80x80(b *testing.B) {
-	benchmarkgroupPasswordWithGoroutines(80, 80, b)
 }
