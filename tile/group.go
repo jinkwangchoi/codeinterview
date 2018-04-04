@@ -68,7 +68,7 @@ func (g Group) PasswordWithGoroutines() int {
 func (g Group) maxWidth() int {
 	var maxWidth int
 	for _, tiles := range g.tiles {
-		if maxWidth > len(tiles) {
+		if maxWidth < len(tiles) {
 			maxWidth = len(tiles)
 		}
 	}
