@@ -1,6 +1,9 @@
 package tile
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 type Group struct {
 	tiles []string
@@ -34,6 +37,42 @@ func (g Group) Password() int {
 		}
 	}
 	return maxArea
+}
+
+func (g Group) PasswordWithGoroutines() int {
+	var wait sync.WaitGroup
+	areaChan := make(chan int, len(g.tiles)*g.maxWidth())
+	for y := range g.tiles {
+		for x := range g.tiles[y] {
+			wait.Add(1)
+			go func(targetX, targetY int) {
+				areaChan <- g.maxRectangleArea(targetX, targetY)
+				wait.Done()
+			}(x, y)
+		}
+	}
+	wait.Wait()
+
+	close(areaChan)
+
+	var maxArea int
+	for area := range areaChan {
+		if area > maxArea {
+			maxArea = area
+		}
+	}
+
+	return maxArea
+}
+
+func (g Group) maxWidth() int {
+	var maxWidth int
+	for _, tiles := range g.tiles {
+		if maxWidth > len(tiles) {
+			maxWidth = len(tiles)
+		}
+	}
+	return maxWidth
 }
 
 func (g Group) maxRectangleArea(x, y int) int {

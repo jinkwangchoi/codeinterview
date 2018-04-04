@@ -57,9 +57,20 @@ func TestGroup(t *testing.T) {
 		So(calcRectArea(0, 2, 0, 0), ShouldEqual, 0)
 		So(calcRectArea(2, 2, 0, 0), ShouldEqual, 0)
 	})
+
+	Convey("PasswordWithGoroutines", t, func() {
+		So(group.PasswordWithGoroutines(), ShouldEqual, 32)
+	})
 }
 
-func benchmarkGroup(width, height int, b *testing.B) {
+func benchmarkgroupPassword(width, height int, b *testing.B) {
+	group := generateGroup(width, height)
+	for i := 0; i < b.N; i++ {
+		group.Password()
+	}
+}
+
+func generateGroup(width, height int) *Group {
 	var buffer bytes.Buffer
 	for i := 0; i < width; i++ {
 		buffer.WriteString("A")
@@ -69,32 +80,44 @@ func benchmarkGroup(width, height int, b *testing.B) {
 	for i := range tiles {
 		tiles[i] = atiles
 	}
-	group := NewGroup(tiles)
-	for i := 0; i < b.N; i++ {
-		group.Password()
-	}
+	return NewGroup(tiles)
 }
 
 func BenchmarkGroup_Password10x10(b *testing.B) {
-	benchmarkGroup(10, 10, b)
+	benchmarkgroupPassword(10, 10, b)
 }
 
 func BenchmarkGroup_Password20x20(b *testing.B) {
-	benchmarkGroup(20, 20, b)
-}
-
-func BenchmarkGroup_Password30x30(b *testing.B) {
-	benchmarkGroup(30, 30, b)
+	benchmarkgroupPassword(20, 20, b)
 }
 
 func BenchmarkGroup_Password40x40(b *testing.B) {
-	benchmarkGroup(40, 40, b)
+	benchmarkgroupPassword(40, 40, b)
 }
 
-func BenchmarkGroup_Password50x50(b *testing.B) {
-	benchmarkGroup(50, 50, b)
+func BenchmarkGroup_Password80x80(b *testing.B) {
+	benchmarkgroupPassword(80, 80, b)
 }
 
-func BenchmarkGroup_Password60x60(b *testing.B) {
-	benchmarkGroup(60, 60, b)
+func benchmarkgroupPasswordWithGoroutines(width, height int, b *testing.B) {
+	group := generateGroup(width, height)
+	for i := 0; i < b.N; i++ {
+		group.PasswordWithGoroutines()
+	}
+}
+
+func BenchmarkGroup_PasswordWithGoroutines10x10(b *testing.B) {
+	benchmarkgroupPasswordWithGoroutines(10, 10, b)
+}
+
+func BenchmarkGroup_PasswordWithGoroutines20x20(b *testing.B) {
+	benchmarkgroupPasswordWithGoroutines(20, 20, b)
+}
+
+func BenchmarkGroup_PasswordWithGoroutines40x40(b *testing.B) {
+	benchmarkgroupPasswordWithGoroutines(40, 40, b)
+}
+
+func BenchmarkGroup_PasswordWithGoroutines80x80(b *testing.B) {
+	benchmarkgroupPasswordWithGoroutines(80, 80, b)
 }
