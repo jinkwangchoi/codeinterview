@@ -82,10 +82,11 @@ func (g Group) maxRectangleArea(x, y int) int {
 	}
 	var maxArea int
 	xIndicesOfSameTilesInRow := g.findXIndicesOfSameTilesInRow(x, y)
+	yIndicesOfSameTilesInColumn := g.findYIndicesOfSameTilesInColumn(x, y)
+
 	for _, xIndexOfSameTilesInRow := range xIndicesOfSameTilesInRow {
-		yIndicesOfSameTilesInColumn := g.findYIndicesOfSameTilesInColumn(xIndexOfSameTilesInRow, y)
 		for _, yIndexOfSameTilesInColumn := range yIndicesOfSameTilesInColumn {
-			tile, err := g.tileAt(x, yIndexOfSameTilesInColumn)
+			tile, err := g.tileAt(xIndexOfSameTilesInRow, yIndexOfSameTilesInColumn)
 			if err != nil {
 				continue
 			}
